@@ -12,16 +12,22 @@ import (
 
 // ADKAgent ADK Agent：eino 的高层 Agent 框架，自动完成"模型 <-> 工具"循环。
 //
-// 与前面两个示例的区别：ChatModelBasic / ChainCompose 是"一次性"调用，
-// ADK 的 ChatModelAgent 则内置了工具调用循环——模型决定调哪个工具、
-// 拿到结果后继续推理，直到给出最终答复。Runner 负责执行并输出事件流。
+// 与 tool 示例对照：那里手写了"模型 <-> 工具"循环，这里的 ChatModelAgent
+// 内置了这个循环——模型决定调哪个工具、拿到结果后继续推理，直到给出最终答复。
+// Runner 负责执行并输出事件流。
 //
 // 本示例学什么：
 // - adk.NewChatModelAgent：Name/Description/Instruction + Model + 工具列表
+// - ToolsConfig 注册工具：tool 示例的 get_current_time 直接复用，不用手写循环
 // - adk.NewRunner 执行 Agent，EnableStreaming 开启事件流
 // - 事件流的消费方式：Next() 迭代 + MessageOutput.GetMessage() 取消息
 func (c *Client) ADKAgent(ctx context.Context) error {
 	// 1. 创建 ChatModelAgent
+	timeTool, err := newTimeTool()
+	if err != nil {
+		return err
+	}
+
 	agent, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
 		Name:        "my-assistant",
 		Description: "一个可以使用工具回答问题的助手。",
@@ -29,9 +35,8 @@ func (c *Client) ADKAgent(ctx context.Context) error {
 		Model:       c.chatModel,
 		ToolsConfig: adk.ToolsConfig{
 			ToolsNodeConfig: compose.ToolsNodeConfig{
-				Tools: []tool.BaseTool{
-					// 注册你的工具，例如 webSearchTool
-				},
+				// 注册工具：同一个 get_current_time，调度交给 ADK
+				Tools: []tool.BaseTool{timeTool},
 			},
 		},
 		// Handlers: []adk.ChatModelAgentMiddleware{...}, // 注册 Middleware
@@ -48,7 +53,7 @@ func (c *Client) ADKAgent(ctx context.Context) error {
 
 	// 3. 发送用户请求并消费事件流
 	input := []adk.Message{
-		schema.UserMessage("Hello, 请做一个自我介绍."),
+		schema.UserMessage("现在上海几点了？这个时间适合做什么？"),
 	}
 
 	events := runner.Run(ctx, input)
