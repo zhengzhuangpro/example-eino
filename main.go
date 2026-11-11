@@ -35,6 +35,8 @@ func main() {
 		cmdErr = client.ToolCalling(ctx)
 	case "graph": // Graph 图编排：Branch 意图分流，双模板汇合到同一模型
 		cmdErr = client.GraphCompose(ctx)
+	case "structured": // 结构化输出：伪工具 + Forced，稳定产出可解析的结构体
+		cmdErr = client.StructuredOutput(ctx)
 	case "adk": // ADK Agent：工具调用循环 + 事件流
 		cmdErr = client.ADKAgent(ctx)
 	case "help", "-h", "--help":
@@ -61,6 +63,7 @@ func usage() {
   chain      Chain 编排：ChatTemplate -> ChatModel -> MessageParser 类型串联
   tool       Tool Calling：InferTool 定义工具，手写"调用 -> 执行 -> 回传"循环
   graph      Graph 图编排：Branch 意图分流，双模板汇合到同一模型
+  structured 结构化输出：伪工具 + ToolChoiceForced，稳定解析成 Go 结构体
   adk        ADK Agent：工具调用循环 + Runner 事件流
 
 环境变量:
