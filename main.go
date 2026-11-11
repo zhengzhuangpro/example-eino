@@ -33,6 +33,8 @@ func main() {
 		cmdErr = client.ChainCompose(ctx)
 	case "tool": // Tool Calling：手写"模型 <-> 工具"调用循环
 		cmdErr = client.ToolCalling(ctx)
+	case "graph": // Graph 图编排：Branch 意图分流，双模板汇合到同一模型
+		cmdErr = client.GraphCompose(ctx)
 	case "adk": // ADK Agent：工具调用循环 + 事件流
 		cmdErr = client.ADKAgent(ctx)
 	case "help", "-h", "--help":
@@ -58,6 +60,7 @@ func usage() {
   chatmodel  基础调用：直接使用 ChatModel 组件，Generate + Stream 两种方式
   chain      Chain 编排：ChatTemplate -> ChatModel -> MessageParser 类型串联
   tool       Tool Calling：InferTool 定义工具，手写"调用 -> 执行 -> 回传"循环
+  graph      Graph 图编排：Branch 意图分流，双模板汇合到同一模型
   adk        ADK Agent：工具调用循环 + Runner 事件流
 
 环境变量:

@@ -44,12 +44,12 @@ func newTimeTool() (tool.InvokableTool, error) {
 //	          --> 再次 Generate --> …… 直到模型不再要工具，给出最终答复
 //
 // 本示例学什么：
-// - utils.InferTool：结构体反射生成参数 schema，一个 Go 函数就是一个工具
-// - model.WithTools：调用时把工具列表交给模型（是每次调用的 Option，不是构造时绑定）
-// - reply.ToolCalls 非空表示模型想调工具，Function.Arguments 是模型生成的参数 JSON 字符串
-// - 工具结果用 schema.ToolMessage(content, callID) 回传，ID 必须对上，
-//   模型才知道这份结果对应哪次调用
-// - 消息历史必须完整：模型回复（含 ToolCalls）和工具结果都要 append 进去
+//   - utils.InferTool：结构体反射生成参数 schema，一个 Go 函数就是一个工具
+//   - model.WithTools：调用时把工具列表交给模型（是每次调用的 Option，不是构造时绑定）
+//   - reply.ToolCalls 非空表示模型想调工具，Function.Arguments 是模型生成的参数 JSON 字符串
+//   - 工具结果用 schema.ToolMessage(content, callID) 回传，ID 必须对上，
+//     模型才知道这份结果对应哪次调用
+//   - 消息历史必须完整：模型回复（含 ToolCalls）和工具结果都要 append 进去
 func (c *Client) ToolCalling(ctx context.Context) error {
 	timeTool, err := newTimeTool()
 	if err != nil {
