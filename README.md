@@ -4,9 +4,13 @@
 
 ## 准备
 
+两种方式配置 `DEEPSEEK_API_KEY`（必须）：
+
 ```bash
-export DEEPSEEK_API_KEY=sk-xxx   # 必须
+export DEEPSEEK_API_KEY=sk-xxx   # 方式一：环境变量
 ```
+
+或复制 `.env.example` 为 `.env` 填入 Key（方式二：启动时自动加载，`.env` 已被 `.gitignore` 忽略）：
 
 ## 示例清单
 
