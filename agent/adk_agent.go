@@ -62,9 +62,9 @@ func (c *Client) ADKAgent(ctx context.Context) error {
 		if !ok {
 			break
 		}
-		fmt.Println(event)
 
-		if msg, err := event.Output.MessageOutput.GetMessage(); err == nil {
+		// 事件流里有多种事件，这里只关心模型消息：内容为空的事件（如纯工具调用轮次）跳过
+		if msg, err := event.Output.MessageOutput.GetMessage(); err == nil && msg.Content != "" {
 			fmt.Printf("Agent: %s\n", msg.Content)
 		}
 	}
