@@ -18,6 +18,7 @@ export DEEPSEEK_API_KEY=sk-xxx   # 必须
 | `graph` | `agent/graph.go` | Graph 图编排：`Branch` 意图分流，双模板汇合到同一模型，Runnable 复用 |
 | `structured` | `agent/structured.go` | 结构化输出：伪工具 + `ToolChoiceForced`，`MessageJSONParser` 解析成结构体 |
 | `workflow` | `agent/workflow.go` | Workflow 编排：字段级映射装配输出，无依赖支路自动并行 |
+| `multiagent` | `agent/multiagent.go` | 多智能体：`AgentTool` 把子 Agent 包成工具，前台按需委托专家 |
 | `adk` | `agent/adk_agent.go` | ADK Agent：注册工具后由框架自动跑调用循环 + Runner 事件流消费 |
 
 ## 运行

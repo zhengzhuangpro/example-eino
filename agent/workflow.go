@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cloudwego/eino/compose"
 	"github.com/cloudwego/eino/components/prompt"
+	"github.com/cloudwego/eino/compose"
 	"github.com/cloudwego/eino/schema"
 )
 

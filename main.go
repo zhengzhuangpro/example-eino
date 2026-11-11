@@ -39,6 +39,8 @@ func main() {
 		cmdErr = client.StructuredOutput(ctx)
 	case "workflow": // Workflow 编排：字段级装配 + 无依赖节点自动并行
 		cmdErr = client.WorkflowCompose(ctx)
+	case "multiagent": // 多智能体：AgentTool 把子 Agent 包成工具，前台按需委托
+		cmdErr = client.MultiAgent(ctx)
 	case "adk": // ADK Agent：工具调用循环 + 事件流
 		cmdErr = client.ADKAgent(ctx)
 	case "help", "-h", "--help":
@@ -67,6 +69,7 @@ func usage() {
   graph      Graph 图编排：Branch 意图分流，双模板汇合到同一模型
   structured 结构化输出：伪工具 + ToolChoiceForced，稳定解析成 Go 结构体
   workflow   Workflow 编排：字段级装配，无依赖节点自动并行
+  multiagent 多智能体：AgentTool 把子 Agent 包成工具，前台按需委托
   adk        ADK Agent：工具调用循环 + Runner 事件流
 
 环境变量:
