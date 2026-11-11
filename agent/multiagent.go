@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/cloudwego/eino/adk"
-	"github.com/cloudwego/eino/compose"
 	"github.com/cloudwego/eino/components/tool"
+	"github.com/cloudwego/eino/compose"
 	"github.com/cloudwego/eino/schema"
 )
 
@@ -61,12 +61,14 @@ func (c *Client) MultiAgent(ctx context.Context) error {
 		return err
 	}
 
-	// 3. 父 Agent：前台。注意它的工具列表里没有普通工具，
-	//    只有 NewAgentTool 包出来的两个"专家"
+	// 3. 父 Agent：前台。注意两点：
+	//    a. 它的工具列表里没有普通工具，只有 NewAgentTool 包出来的两个"专家"
+	//    b. Instruction 不点名具体专家——模型路由依据是各工具（子 Agent）的
+	//       Description，实测不点名也路由正确；Instruction 只写人设与输出规范
 	reception, err := adk.NewChatModelAgent(ctx, &adk.ChatModelAgentConfig{
 		Name:        "reception",
 		Description: "客服前台，负责把问题分流给对应专家。",
-		Instruction: "你是客服前台。根据问题类型委托对应专家（技术问题找 go_expert，时间问题找 time_expert），拿到专家答复后用一两句话转述给用户。",
+		Instruction: "你是客服前台。收到问题后委托合适的专家，拿到专家答复后用一两句话转述给用户。",
 		Model:       c.chatModel,
 		ToolsConfig: adk.ToolsConfig{
 			ToolsNodeConfig: compose.ToolsNodeConfig{
@@ -86,7 +88,7 @@ func (c *Client) MultiAgent(ctx context.Context) error {
 
 	questions := []string{
 		"我的 Go 程序内存占用越来越高，可能是什么原因？", // → 委托 go_expert
-		"现在上海几点了？",                            // → 委托 time_expert（内部再调工具）
+		"现在上海几点了？", // → 委托 time_expert（内部再调工具）
 	}
 	for _, q := range questions {
 		fmt.Printf("\nQ: %s\n", q)
